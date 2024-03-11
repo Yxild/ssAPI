@@ -1,6 +1,5 @@
 const express = require('express'); // Web Handling
 const helmet = require('helmet'); // Web Protection
-const uuid = require('uuid'); // Script Generation
 
 const app = express();
 const port = 1234;
