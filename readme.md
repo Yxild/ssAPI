@@ -1,10 +1,9 @@
 ### External Server-Side Execution Proof-of-Concept (This isn't meant for actual, global implementation)
 
-ROBLOX Asset URL: ???
-ROBLOX Asset ID: 000
+ROBLOX Asset URL: https://create.roblox.com/store/asset/16708734208
+ROBLOX Asset ID: 16708734208
 
 # ssAPI
-
 Just a really simple & small server-side where you can execute scripts from the Server to a ROBLOX client.
 
 This works by the ROBLOX server calling a Path (in particular `/checck/`) which checks a Table if there is a script for the game directly.
@@ -13,6 +12,8 @@ There is a `disconnect` function that is only called via `bind to close`
 
 This is probably really unoptimized and shit but it'll work I guess
 There is 0 authentication to the client & server.
+
+**WARNING**: This requires `HttpService` to work as it uses External URLs.
 
 ## Backend (Server)
 1. run `npm init` and fill out the information.
