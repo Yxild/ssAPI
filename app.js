@@ -1,5 +1,6 @@
 const express = require('express'); // Web Handling
 const helmet = require('helmet'); // Web Protection
+const uuid = require('uuid'); // Script Generation
 
 const app = express();
 const port = 1234;
@@ -15,7 +16,7 @@ app.post('/connect', (req, res) => {
     if (!servers[gameId])
         servers[gameId] = {};
 
-    servers[gameId][jobId] = {};
+    servers[gameId][jobId] = { scripts: [] }; // init
 
     console.log(`${gameId} @ ${jobId} : Connected Server`);
     res.json({ success: true });
@@ -41,8 +42,12 @@ app.post('/runscript/', (req, res) => {
         const { gameId, jobId, script } = req.body;
         console.log(`${gameId} @ ${jobId} : Added script to script queue, encoded: ${Buffer.from(script).toString('base64')}`);
 
-        if (servers[gameId][jobId]) {
-            servers[gameId][jobId].script = Buffer.from(script).toString('base64');
+        if (servers[gameId] && servers[gameId][jobId]) {
+            if (!servers[gameId][jobId].scripts) {
+                servers[gameId][jobId].scripts = []; // Initialize the scripts array if it's undefined
+            }
+            // Append the new script to the existing scripts array
+            servers[gameId][jobId].scripts.push(Buffer.from(script).toString('base64'));
             res.json({ success: true });
         } else {
             res.status(404).json({ error: 'Server not found' });
@@ -57,12 +62,12 @@ app.post('/runscript/', (req, res) => {
 app.get('/check/:gameId/:jobId', (req, res) => {
     try {
         const { gameId, jobId } = req.params;
-        const script = servers[gameId][jobId]?.script;
+        const scripts = servers[gameId][jobId]?.scripts;
 
-        if (script) {
+        if (scripts) {
             if (servers[gameId][jobId]) {
-                res.json({ success: true, script });
-                delete servers[gameId][jobId].script;
+                res.json({ success: true, scripts });
+                delete servers[gameId][jobId].scripts;
             } else {
                 res.json({ success: false, message: 'Server not found' });
             }
