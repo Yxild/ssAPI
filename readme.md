@@ -5,6 +5,7 @@ ROBLOX Asset ID: 16708734208
 
 # ssAPI
 Just a really simple & small server-side where you can execute scripts from the Server to a ROBLOX client.
+This will probably get updated overtime because it's for learning
 
 This works by the ROBLOX server calling a Path (in particular `/checck/`) which checks a Table if there is a script for the game directly.
 Also this will connect to the backend by using a function called `connect`, this just add's the game's Identified (`jobId`) to the table :)
