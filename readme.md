@@ -6,10 +6,10 @@ ROBLOX Asset ID: 16708734208
 # ssAPI
 ![Alt text](https://i.imgur.com/lxFLXL2.png "Imgur")
 
-Just a really simple & small server-side where you can execute scripts from the Server to a ROBLOX client.
+Just a really simple & small server-side where you can execute scripts from the Server to a ROBLOX client. <br/>
 This will probably get updated overtime because it's for learning
 
-This is probably really unoptimized and shit but it'll work I guess
+This is probably really unoptimized and shit but it'll work I guess <br/>
 There is 0 authentication to the client & server.
 
 **WARNING**: This requires `HttpService` to work as it uses External URLs from the ROBLOX URLs.
@@ -28,14 +28,14 @@ There is 0 authentication to the client & server.
 4. Save & Publish the Game
 
 ## Path Systems (Backend)
-`/connect` (POST): Sends JSON data to the backend and adds to a Table of the game information.
-`/disconnect` (POST): Sends JSON data to remove the game information.
-`/runscript` (POST): Awaits for JSON data to add to a Script Queue for Execution on a Server.
-`/check/{gameId}/{jobId}` (GET): Sends out the Script Data for a ROBLOX game to then Run the Script Queue.
-`/servers` (GET): Sends JSON data of each game in the Backend.
+`/connect` (POST): Sends JSON data to the backend and adds to a Table of the game information. <br/>
+`/disconnect` (POST): Sends JSON data to remove the game information. <br/>
+`/runscript` (POST): Awaits for JSON data to add to a Script Queue for Execution on a Server. <br/>
+`/check/{gameId}/{jobId}` (GET): Sends out the Script Data for a ROBLOX game to then Run the Script Queue. <br/>
+`/servers` (GET): Sends JSON data of each game in the Backend. <br/>
 
 ### Requests
-`/connect` POST request (JSON)
+`/connect` POST request (JSON) <br/>
 ```json
 {
     "gameId": "{Enter gameId here}",
@@ -43,7 +43,7 @@ There is 0 authentication to the client & server.
 }
 ```
 
-`/disconnect` POST request (JSON)
+`/disconnect` POST request (JSON) <br/>
 ```json
 {
     "gameId": "{Enter gameId here}",
@@ -51,7 +51,7 @@ There is 0 authentication to the client & server.
 }
 ```
 
-`/runscript` POST request (JSON)
+`/runscript` POST request (JSON) <br/>
 ```json
 {
     "gameId": "{Enter gameId here}",
