@@ -35,15 +35,7 @@ There is 0 authentication to the client & server.
 `/servers` (GET): Sends JSON data of each game in the Backend. <br/>
 
 ### Requests
-`/connect` POST request (JSON) <br/>
-```json
-{
-    "gameId": "{Enter gameId here}",
-    "jobId": "{Enter servers jobId here}"
-}
-```
-
-`/disconnect` POST request (JSON) <br/>
+`/connect` POST request (JSON) and `/disconnect` POST request (JSON) <br/>
 ```json
 {
     "gameId": "{Enter gameId here}",
