@@ -27,10 +27,9 @@ router.post('/disconnect', (req, res) => {
 
         delete servers[gameId][jobId];
 
-        for (const job of servers) {
-            if (job != nil)
-                Counter += 1
-        }
+        for (const job of Object.keys(servers[gameId]))
+            if (servers[gameId][job] != nil || servers[gameId][job] != undefined)
+                Counter += 1;
 
         if (Counter == 0)
             delete servers[gameId];
