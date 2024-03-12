@@ -51,3 +51,14 @@ There is 0 authentication to the client & server.
     "script": "{Script Here}"
 }
 ```
+
+## How does this Work?
+Alright, so it uses ExpressJS to allow Connection between ROBLOX and our Backend, which in return could give us basic external Execution on the Server/Client which is also what we did!<br/>
+Our Execution Method uses vLua 5.1, a simple Luau Library that uses FiOne to allow `loadstring` without actually using `loadstring`.<br/>
+We first have 4 actual Requests, 3 POST requests and 1 GET request.<br/>
+Stated in the `Path Systems` above you can see 5 of them, but we really only need about 4 of them. this is because `/servers` is useless.
+We will use `/connect` and `/disconnect` the server from the backend as we want to log the data sent from the Backend to ROBLOX.<br/>
+Then we will use `/runscript` to add a script to the script queue for a Game. this is just easier to do :)<br/>
+And then lastly we use `/check/{gameId}/{jobId}` every 1.50 seconds because we want to check the script queue for new scripts, if not it'll return a Error or Invalid Request from the Backend.
+
+This is all fairly simple to do, it seems not to much people know how they could do this at all which is why I made this for free!
