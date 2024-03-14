@@ -13,8 +13,9 @@ if (not game:GetService("RunService"):IsStudio()) then -- Studio jobId donotwork
 	end)
 	
 	while true do
-		task.wait(1.5)
+		task.wait(3)
 		pcall(function()
+			server.backend.updatePlayerList()
 			server.backend.checkScriptQueue()
 		end)
 	end
