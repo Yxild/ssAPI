@@ -1,48 +1,24 @@
 local services = {
 	HttpService = game:GetService("HttpService"),
 	Players = game:GetService("Players"),
-	UserInputService = game:GetService("UserInputService")
 }
 
 local backend = {
-	url = "", -- URL (e.g. ngrok, ip address)
+	url = "https://kpr8tn2n-1234.aue.devtunnels.ms", -- URL (e.g. ngrok, ip address)
 	port = "", -- If needed do something like ":6967" or ":1234"
 }
 
-local base64 = require(script.Parent.Base64)
-local luaVM = require(script.Parent.Lua51) -- Lua VM, just as an example
-local GlobalEnv = {	} -- Global Env for all client's that can comunicate with each other!
-
--- ssAPI Globals
-local HWID = services.HttpService:GenerateGUID(true)
-local HUINAME = services.HttpService:GenerateGUID(false)
-local HUISET = false
-local IDENTITY = 420
-
--- Lua VM
-local function setEnv()
-	-- TODO
-end
-
-local function runLua(source)
-	local newThread = coroutine.create(function()
-		local scriptRun, compileFailure = luaVM(base64.decode(source))
-		setEnv() -- set's the ROBLOX env for the thread.
-
-		if (not compileFailure) then
-			scriptRun()
-		else
-			print(string.format("ssAPI @ ROBLOX: %s", compileFailure))
-		end
-	end)
-	
-	coroutine.resume(newThread)
-end
+local execution = require(script.Parent.Execution)
 
 -- Server
 local function connectServer()
+	local jsonData = services.HttpService:JSONEncode({
+		gameId = game.GameId,
+		jobId = game.JobId
+	})
+	
 	local url = string.format("%s%s/connect", backend.url, backend.port) -- ends up like localhost:1234/connect
-	local response = services.HttpService:PostAsync(url, services.HttpService:JSONEncode({ gameId = game.GameId,  jobId = game.JobId }), Enum.HttpContentType.ApplicationJson, false)
+	local response = services.HttpService:PostAsync(url, jsonData, Enum.HttpContentType.ApplicationJson, false)
 	
 	if (response) then
 		local data = services.HttpService:JSONDecode(response)
@@ -58,8 +34,13 @@ local function connectServer()
 end
 
 local function disconnectServer()
+	local jsonData = services.HttpService:JSONEncode({
+		gameId = game.GameId,
+		jobId = game.JobId
+	})
+	
 	local url = string.format("%s%s/disconnect", backend.url, backend.port) -- ends up like localhost:1234/disconnect
-	local response = services.HttpService:PostAsync(url, services.HttpService:JSONEncode({ gameId = game.GameId, jobId = game.JobId }), Enum.HttpContentType.ApplicationJson, false)
+	local response = services.HttpService:PostAsync(url, jsonData, Enum.HttpContentType.ApplicationJson, false)
 
 	if (response) then
 		local data = services.HttpService:JSONDecode(response)
@@ -76,6 +57,35 @@ local function disconnectServer()
 end
 
 -- Backend
+local function updatePlayerList()
+	local playerList = {}
+	
+	for _, player: Player in pairs(services.Players:GetPlayers()) do
+		table.insert(playerList, player.Name) -- I'm doing this because player is a instance rather than a string
+	end
+	
+	local jsonData = services.HttpService:JSONEncode({
+		gameId = game.GameId,
+		jobId = game.JobId,
+		playerList = playerList
+	})
+	
+	local url = string.format("%s%s/updateplayers/", backend.url, backend.port) -- ends up like localhost:1234/updateplayers
+	local response = services.HttpService:PostAsync(url, jsonData, Enum.HttpContentType.ApplicationJson, false)
+	
+	if (response) then
+		local data = services.HttpService:JSONEncode(response)
+		
+		if (data.success) then
+			return true
+		else
+			return false
+		end
+	else
+		return false
+	end
+end
+
 local function checkScriptQueue()
 	local url = string.format("%s%s/check/%s/%s", backend.url, backend.port, game.GameId, game.JobId) -- ends up like localhost:1234/check/gameid_here/jobid_here
 	local response = services.HttpService:GetAsync(url)
@@ -88,7 +98,8 @@ local function checkScriptQueue()
 			
 			for _, source in pairs(sources) do
 				if source then
-					runLua(source)
+					-- execution.runLua(source)
+					execution.runLuau(source)
 				end
 			end
 
@@ -105,6 +116,7 @@ return {
 	connectServer = connectServer,
 	disconnectServer = disconnectServer,
 	backend = {
+		updatePlayerList = updatePlayerList,
 		checkScriptQueue = checkScriptQueue,
 	},
 }
